@@ -419,6 +419,13 @@ const App: React.FC = () => {
               <p className="text-gray-500 mb-8 text-center">Adicione a quantidade de pessoas por faixa etária.</p>
 
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                 
+                 {/* Table Header */}
+                 <div className="flex justify-between items-center px-3 mb-2">
+                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Faixa Etária</span>
+                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Quantidade</span>
+                 </div>
+
                  <div className="space-y-3">
                     {AGE_RANGES.map((range) => (
                       <AgeSelector 

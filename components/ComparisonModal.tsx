@@ -102,8 +102,8 @@ export const ComparisonModal: React.FC<ComparisonModalProps> = ({ plans, onClose
                   <td key={idx} className="p-3 md:p-5 align-top">
                     <div className="space-y-2 md:space-y-1">
                         {cp.details.map((det, i) => (
-                            <div key={i} className="flex flex-col md:flex-row md:justify-between border-b border-dashed border-gray-100 last:border-0 pb-1">
-                                <span className="text-gray-500 text-[10px] md:text-sm">{det.ageRange} anos</span>
+                            <div key={i} className="flex flex-col md:flex-row md:items-center border-b border-dashed border-gray-100 last:border-0 pb-1">
+                                <span className="text-gray-500 text-[10px] md:text-sm md:w-32">{det.ageRange} anos</span>
                                 <span className="font-medium text-gray-800 text-xs md:text-sm">{formatMoney(det.unitPrice)}</span>
                             </div>
                         ))}

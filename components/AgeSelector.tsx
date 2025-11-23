@@ -11,8 +11,7 @@ interface AgeSelectorProps {
 export const AgeSelector: React.FC<AgeSelectorProps> = ({ range, count, onIncrement, onDecrement }) => {
   return (
     <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:border-blue-500 transition-colors">
-      <div className="flex flex-col">
-        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Faixa Etária</span>
+      <div className="flex items-center">
         <span className="text-lg font-bold text-gray-800">{range} <span className="text-sm font-normal text-gray-500">anos</span></span>
       </div>
       
