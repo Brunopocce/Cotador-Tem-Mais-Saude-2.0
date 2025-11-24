@@ -28,27 +28,6 @@ const App: React.FC = () => {
 
   const whatsappLink = "https://wa.me/5515991789707?text=Ol%C3%A1%2C%20Bruno!%0AQuero%20mais%20informa%C3%A7%C3%B5es%20sobre%20*plano%20de%20sa%C3%BAde*";
 
-  // AUDIO PLAYBACK FUNCTION
-  const playWelcomeAudio = () => {
-    try {
-      const audio = new Audio('/welcome.mp3');
-      audio.volume = 1.0;
-      const playPromise = audio.play();
-
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            console.log("Audio playing successfully");
-          })
-          .catch((error) => {
-            console.warn("Audio playback prevented or file missing:", error);
-          });
-      }
-    } catch (err) {
-      console.error("Error initializing audio:", err);
-    }
-  };
-
   // Reset selection when changing category
   const selectCategory = (category: QuoteCategory) => {
     setQuoteCategory(category);
@@ -139,9 +118,6 @@ const App: React.FC = () => {
       // We trigger the visual alert in the UI, but we can also block here
       return;
     }
-
-    // Play Audio when proceeding to results
-    playWelcomeAudio();
 
     setStep('results');
     window.scrollTo({ top: 0, behavior: 'smooth' });
