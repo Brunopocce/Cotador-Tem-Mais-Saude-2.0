@@ -13,9 +13,8 @@ const App: React.FC = () => {
   const [quoteCategory, setQuoteCategory] = useState<QuoteCategory | null>(null);
   const [showLimitAlert, setShowLimitAlert] = useState(false);
 
-  // COMPARISON STATE
-  const [selectedForComparison, setSelectedForComparison] = useState<CalculatedPlan[]>([]);
-  const [showComparisonModal, setShowComparisonModal] = useState(false);
+  // COMPARISON STATE - Refactored for Single Plan Variant Comparison
+  const [comparisonModalPlans, setComparisonModalPlans] = useState<CalculatedPlan[] | null>(null);
 
   const [userSelection, setUserSelection] = useState<UserSelection>(() => {
     const initial: UserSelection = {};
@@ -36,14 +35,14 @@ const App: React.FC = () => {
     AGE_RANGES.forEach(range => initial[range as string] = 0);
     setUserSelection(initial);
     setShowLimitAlert(false);
-    setSelectedForComparison([]); // Reset comparison when restarting
+    setComparisonModalPlans(null);
     setStep('age-input'); // Go to Age Input instead of direct calculator
   };
 
   const goBack = () => {
     if (step === 'results') {
       setStep('age-input');
-      setSelectedForComparison([]);
+      setComparisonModalPlans(null);
     } else if (step === 'age-input') {
       if (quoteCategory === 'PF') {
         setStep('type-selection');
@@ -95,22 +94,9 @@ const App: React.FC = () => {
     setShowLimitAlert(false);
   };
 
-  // COMPARISON HANDLER
-  const handleToggleCompare = (plan: CalculatedPlan) => {
-    setSelectedForComparison(prev => {
-      // Check if already selected (match by plan ID and total price to ensure same variant)
-      const exists = prev.find(p => p.plan.id === plan.plan.id && p.totalPrice === plan.totalPrice);
-      
-      if (exists) {
-        return prev.filter(p => p !== exists);
-      } else {
-        if (prev.length >= 3) {
-          alert("Você pode comparar no máximo 3 planos.");
-          return prev;
-        }
-        return [...prev, plan];
-      }
-    });
+  // NEW COMPARISON HANDLER - Opens modal directly with provided variants
+  const handleComparePlans = (plansToCompare: CalculatedPlan[]) => {
+      setComparisonModalPlans(plansToCompare);
   };
 
   const handleContinueToResults = () => {
@@ -623,8 +609,7 @@ const App: React.FC = () => {
                 <PlanCard 
                     key={`${group[0].plan.id}-${idx}`} 
                     variants={group} 
-                    compareList={selectedForComparison}
-                    onToggleCompare={handleToggleCompare}
+                    onComparePlans={handleComparePlans}
                 />
               ))}
             </div>
@@ -632,50 +617,12 @@ const App: React.FC = () => {
         )}
       </main>
       
-      {/* FLOATING COMPARISON BAR */}
-      {selectedForComparison.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-5px_15px_rgba(0,0,0,0.1)] p-4 z-40 animate-slideUp">
-           <div className="max-w-4xl mx-auto flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 text-blue-900 font-bold px-3 py-1 rounded-full text-sm">
-                      {selectedForComparison.length}
-                  </div>
-                  <span className="text-sm text-gray-600 font-medium hidden sm:inline">
-                      planos selecionados para comparação
-                  </span>
-                  <span className="text-sm text-gray-600 font-medium sm:hidden">
-                      selecionados
-                  </span>
-              </div>
-              <div className="flex items-center gap-3">
-                  <button 
-                    onClick={() => setSelectedForComparison([])}
-                    className="text-sm text-gray-500 hover:text-red-500 underline"
-                  >
-                      Limpar
-                  </button>
-                  <button 
-                    onClick={() => setShowComparisonModal(true)}
-                    disabled={selectedForComparison.length < 2}
-                    className={`px-6 py-2 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95
-                        ${selectedForComparison.length < 2 
-                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                            : 'bg-blue-600 text-white hover:bg-blue-700'
-                        }`}
-                  >
-                      Comparar Agora
-                  </button>
-              </div>
-           </div>
-        </div>
-      )}
-
       {/* COMPARISON MODAL */}
-      {showComparisonModal && (
+      {comparisonModalPlans && (
           <ComparisonModal 
-            plans={selectedForComparison} 
-            onClose={() => setShowComparisonModal(false)}
-            onRemove={handleToggleCompare} // Re-using toggle removes it
+            plans={comparisonModalPlans} 
+            onClose={() => setComparisonModalPlans(null)}
+            onRemove={() => {}} // Remove functionality disabled/not used in fixed comparison
           />
       )}
     </div>

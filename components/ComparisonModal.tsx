@@ -60,15 +60,6 @@ export const ComparisonModal: React.FC<ComparisonModalProps> = ({ plans, onClose
                 {/* Plan Headers */}
                 {plans.map((cp, idx) => (
                   <th key={idx} className="p-3 md:p-5 min-w-[160px] md:min-w-[300px] border-b-2 border-gray-100 align-top relative group bg-white sticky top-0 z-20">
-                    <button 
-                        onClick={() => onRemove(cp)}
-                        className="absolute top-3 right-3 text-gray-300 hover:text-red-500 md:opacity-0 group-hover:opacity-100 transition-all p-1"
-                        title="Remover da comparação"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 md:w-5 md:h-5">
-                            <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clipRule="evenodd" />
-                        </svg>
-                    </button>
                     <div className={`inline-block px-2 py-0.5 rounded text-[10px] md:text-xs font-bold text-white mb-2 ${cp.plan.logoColor}`}>
                       {cp.plan.operator}
                     </div>
