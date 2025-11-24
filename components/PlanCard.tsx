@@ -110,19 +110,9 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, onComparePlans }) 
         
         <!-- Header -->
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #003366; padding-bottom: 15px; margin-bottom: 20px;">
-           <div style="display: flex; align-items: center;">
-              <span style="font-size: 32px; font-weight: bold; color: #003366; letter-spacing: -1px; font-family: sans-serif;">TEM</span>
-              <div style="margin: 0 4px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
-                 <svg viewBox="0 0 24 24" fill="#003366" style="width: 32px; height: 32px;">
-                    <path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M17,13h-3.5V16.5 c0,0.83-0.67,1.5-1.5,1.5s-1.5-0.67-1.5-1.5V13H7c-0.83,0-1.5-0.67-1.5-1.5S6.17,10,7,10h3.5V6.5C10.5,5.67,11.17,5,12,5 s1.5,0.67,1.5,1.5V10H17c0.83,0,1.5,0.67,1.5,1.5S17.83,13,17,13z"/>
-                    <path fill-opacity="0.3" d="M12,8c-2.21,0-4,1.79-4,4s1.79,4,4,4s4-1.79,4-4S14.21,8,12,8z M12,14c-1.1,0-2-0.9-2-2s0.9-2,2-2s2,0.9,2,2 S13.1,14,12,14z"/>
-                 </svg>
-              </div>
-              <span style="font-size: 40px; font-family: 'Satisfy', cursive; color: #003366; margin-left: -4px; margin-top: 8px;">Saúde</span>
-              <div style="margin-left: 12px; padding-left: 12px; border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; justify-content: center;">
-                   <span style="font-size: 10px; font-weight: bold; color: #4b5563; text-transform: uppercase; letter-spacing: 0.05em;">Corretora</span>
-                   <span style="font-size: 10px; font-weight: bold; color: #4b5563; text-transform: uppercase; letter-spacing: 0.05em;">Autorizada</span>
-              </div>
+           <div>
+              <h1 style="font-size: 24px; font-weight: 800; color: #003366; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">TEM MAIS SAÚDE</h1>
+              <p style="font-size: 10px; font-weight: bold; color: #6b7280; margin: 2px 0 0 0; text-transform: uppercase; letter-spacing: 1px;">Corretora Autorizada</p>
            </div>
            
            <div style="text-align: right;">
@@ -172,8 +162,9 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, onComparePlans }) 
 
         <!-- Footer -->
         <div style="margin-top: 30px; text-align: center; font-size: 10px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 10px;">
-            <p>Este documento é uma simulação. Os valores podem sofrer alterações.</p>
-            <p style="font-weight: bold; color: #003366;">TEM Saúde - Corretora Autorizada</p>
+            <p style="margin-bottom: 4px;">Este documento é uma simulação. Os valores podem sofrer alterações.</p>
+            <p style="font-weight: bold; color: #003366; margin-bottom: 2px;">TEM MAIS SAÚDE</p>
+            <p>Rua Eduardo Prado, 211 Centro Votorantim-SP CEP 18110-090</p>
         </div>
       </div>
     `;

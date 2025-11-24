@@ -4,6 +4,7 @@ import { AgeRange, UserSelection, CalculatedPlan, QuoteCategory, HealthPlan } fr
 import { AgeSelector } from './components/AgeSelector';
 import { PlanCard } from './components/PlanCard';
 import { ComparisonModal } from './components/ComparisonModal';
+import { PriceSummaryTable } from './components/PriceSummaryTable';
 
 // Updated steps to separate age input from results
 type AppStep = 'type-selection' | 'lives-selection' | 'age-input' | 'results';
@@ -26,6 +27,18 @@ const App: React.FC = () => {
   const [groupedPlans, setGroupedPlans] = useState<CalculatedPlan[][]>([]);
 
   const whatsappLink = "https://wa.me/5515991789707?text=Ol%C3%A1%2C%20Bruno!%0AQuero%20mais%20informa%C3%A7%C3%B5es%20sobre%20*plano%20de%20sa%C3%BAde*";
+
+  // Audio Playback Helper
+  const playWelcomeAudio = () => {
+    try {
+      // Ensure you have a file named 'welcome.mp3' in your public folder
+      const audio = new Audio('/welcome.mp3');
+      audio.volume = 1.0; // Set volume to max to ensure it is heard
+      audio.play().catch(err => console.log('Audio playback failed (interaction required or file missing):', err));
+    } catch (e) {
+      console.error("Error initializing audio", e);
+    }
+  };
 
   // Reset selection when changing category
   const selectCategory = (category: QuoteCategory) => {
@@ -301,7 +314,10 @@ const App: React.FC = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
               <button 
-                onClick={() => selectCategory('PF')}
+                onClick={() => {
+                  playWelcomeAudio();
+                  selectCategory('PF');
+                }}
                 className="group relative bg-white p-8 rounded-2xl shadow-md border-2 border-transparent hover:border-[#003366] hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center"
               >
                 <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-[#003366] group-hover:text-white transition-colors">
@@ -317,7 +333,10 @@ const App: React.FC = () => {
               </button>
 
               <button 
-                onClick={() => setStep('lives-selection')}
+                onClick={() => {
+                  playWelcomeAudio();
+                  setStep('lives-selection');
+                }}
                 className="group relative bg-white p-8 rounded-2xl shadow-md border-2 border-transparent hover:border-[#003366] hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center"
               >
                 <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-[#003366] group-hover:text-white transition-colors">
@@ -613,6 +632,8 @@ const App: React.FC = () => {
                 />
               ))}
             </div>
+
+            <PriceSummaryTable groups={groupedPlans} />
           </div>
         )}
       </main>
