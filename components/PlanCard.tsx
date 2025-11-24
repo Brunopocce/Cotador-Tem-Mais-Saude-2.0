@@ -271,11 +271,6 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, onComparePlans }) 
                         </span>
                     )}
                 </div>
-                
-                {/* Specific Styling for Eva Prata */}
-                {basePlan.operator.includes('Eva') && basePlan.name.includes('Prata') && (
-                    <span className="block text-xs font-normal text-white/80 mt-0.5 tracking-normal">(enfermaria)</span>
-                )}
             </div>
             
             {/* View Details Button */}
