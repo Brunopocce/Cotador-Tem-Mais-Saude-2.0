@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CalculatedPlan, HealthPlan } from '../types';
 
@@ -12,34 +12,9 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, compareList, onTog
   const [showCopartInfo, setShowCopartInfo] = useState(false);
   const [showPlanDetails, setShowPlanDetails] = useState(false);
   
-  // Determine default selection:
-  // If multiple variants, require user to select (index -1).
-  // If single variant, select it automatically (index 0).
-  const [selectedIndex, setSelectedIndex] = useState<number>(() => 
-    variants.length > 1 ? -1 : 0
-  );
-
-  // Update state if variants prop changes
-  useEffect(() => {
-    if (variants.length > 1) {
-      setSelectedIndex(-1);
-    } else {
-      setSelectedIndex(0);
-    }
-  }, [variants]);
-
   if (!variants || variants.length === 0) return null;
 
-  const selectedPlan = selectedIndex >= 0 ? variants[selectedIndex] : null;
-  
-  // Check if the currently rendered selected plan is in the compare list
-  const isSelectedForCompare = selectedPlan 
-    ? compareList.some(p => p.plan.id === selectedPlan.plan.id && p.totalPrice === selectedPlan.totalPrice)
-    : false;
-  
   // Static data comes from the first plan in the group (Name, Operator, Hospitals)
-  // Or from selected plan if available
-  const displayPlan = selectedPlan ? selectedPlan.plan : variants[0].plan;
   const basePlan = variants[0].plan;
 
   const formatMoney = (value: number) => 
@@ -48,24 +23,23 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, compareList, onTog
   const renderCopartLabel = (plan: HealthPlan) => {
      switch(plan.coparticipationType) {
         case 'full': 
-            return <span>Com Coparticipação</span>;
+            return <span className="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded border border-orange-100">Com Coparticipação</span>;
         case 'partial': 
             return (
-                <span className="flex flex-row items-center gap-1 leading-tight">
-                    <span className="whitespace-nowrap">Sem Copart.</span>
-                    <span className="text-[9px] sm:text-[10px] font-medium text-gray-500 uppercase tracking-tight whitespace-nowrap pt-0.5">(Exceto Terapias)</span>
+                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100 flex items-center gap-1">
+                    Sem Copart. <span className="text-[10px] text-blue-400 font-medium uppercase">(Exceto Terapias)</span>
                 </span>
             );
         case 'none': 
-            return <span>Sem Coparticipação</span>;
+            return <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded border border-green-100">Sem Coparticipação</span>;
         default: 
-            return <span>Padrão</span>;
+            return <span className="text-xs font-bold text-gray-600 bg-gray-50 px-2 py-1 rounded border border-gray-100">Padrão</span>;
      }
   };
 
   return (
     <>
-      <div className={`bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border flex flex-col h-full relative group ${isSelectedForCompare ? 'ring-2 ring-blue-500 border-blue-500 transform -translate-y-1' : 'border-gray-100'}`}>
+      <div className={`bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 flex flex-col h-full relative group`}>
         
         {/* Colored Header */}
         <div className={`${basePlan.logoColor} p-4 pt-5 flex justify-between items-start relative rounded-t-xl`}>
@@ -103,7 +77,7 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, compareList, onTog
         
         <div className="p-5 flex-1 flex flex-col">
           
-          <div className="space-y-2 mb-4 flex-1">
+          <div className="space-y-2 mb-4">
             <p className="text-xs font-semibold text-gray-500 uppercase">Principais Hospitais:</p>
             <div className="flex flex-wrap gap-1">
               {basePlan.hospitals.map((h, i) => (
@@ -114,10 +88,10 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, compareList, onTog
             </div>
           </div>
           
-          {/* Copart Info Button - Enhanced */}
+          {/* Copart Info Button */}
           <button 
             onClick={(e) => { e.stopPropagation(); setShowCopartInfo(true); }}
-            className="w-full flex items-center justify-center gap-2 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-100 py-2.5 rounded-lg transition-colors uppercase tracking-wide mt-2 mb-1"
+            className="w-full flex items-center justify-center gap-2 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-100 py-2.5 rounded-lg transition-colors uppercase tracking-wide mt-auto mb-4"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-blue-500/80">
               <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-.988-1.129c1.454-1.272 3.776-1.272 5.23 0 1.539 1.345 1.902 3.56 1.02 5.51-.686 1.52-2.255 2.447-3.232 3.12l-.052.036c-.906.62-2.055 1.407-2.055 2.88a.75.75 0 0 1-1.5 0c0-2.247 1.477-3.395 2.615-4.173l.052-.036c.888-.607 1.915-1.309 2.305-2.174.464-1.025.271-2.167-.537-2.874Z" clipRule="evenodd" />
@@ -127,117 +101,71 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, compareList, onTog
           </button>
         </div>
 
-        <div className="bg-gray-50 border-t border-gray-100 rounded-b-xl relative flex flex-col justify-end">
-           {/* Variant Selector */}
-           {variants.length > 1 && (
-            <div className="px-4 pt-4 pb-0 mb-3">
-              <div className="flex justify-between items-center mb-2">
-                <p className="text-xs font-semibold text-gray-500 uppercase">Escolha a modalidade:</p>
-              </div>
-              <div className="flex flex-col gap-2">
-                {variants.map((v, idx) => {
-                   const isVariantSelected = idx === selectedIndex;
-                   return (
-                     <button
-                        key={v.plan.id}
-                        onClick={() => setSelectedIndex(idx)}
-                        className={`group w-full flex items-center justify-between p-3 rounded-lg border transition-all duration-200 ease-in-out text-left relative hover:z-20
-                          ${isVariantSelected 
-                            ? 'bg-white border-blue-600 shadow-sm z-10' 
-                            : 'bg-white border-gray-200 hover:border-blue-400 hover:bg-blue-50/30'
-                          }`}
-                     >
-                        <div className="flex items-center gap-3 z-10 w-full">
-                          {/* Radio Circle UI */}
-                          <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors flex-shrink-0
-                            ${isVariantSelected ? 'border-blue-600 bg-blue-600' : 'border-gray-300 group-hover:border-blue-400'}`}>
-                            {isVariantSelected && <div className="w-1.5 h-1.5 bg-white rounded-full shadow-sm" />}
-                          </div>
-                          
-                          <span className={`font-bold text-sm transition-colors ${isVariantSelected ? 'text-blue-900' : 'text-gray-600'}`}>
-                            {renderCopartLabel(v.plan)}
-                          </span>
-                        </div>
-                        
-                        {/* Selected Background Highlight */}
-                        {isVariantSelected && (
-                          <div className="absolute inset-0 bg-blue-50 opacity-20 pointer-events-none rounded-lg"></div>
-                        )}
-                     </button>
-                   );
-                })}
-              </div>
-            </div>
-           )}
+        {/* Variants List Section */}
+        <div className="bg-gray-50 border-t border-gray-100 rounded-b-xl flex flex-col">
+           {variants.map((v, idx) => {
+             // Check if this specific variant is in the comparison list
+             const isSelectedForCompare = compareList.some(p => p.plan.id === v.plan.id && p.totalPrice === v.totalPrice);
+             
+             return (
+               <div key={v.plan.id} className={`p-4 ${idx > 0 ? 'border-t border-gray-200' : ''}`}>
+                 
+                 {/* Header for this Variant */}
+                 <div className="mb-3 flex justify-between items-center">
+                    {renderCopartLabel(v.plan)}
+                 </div>
 
-           {/* Single Variant Label if only 1 exists */}
-           {variants.length === 1 && (
-             <div className="px-4 pt-4 flex justify-between items-center">
-               <div className="text-xs font-bold py-1 px-3 rounded-full bg-gray-200 text-gray-600 inline-block">
-                 {renderCopartLabel(variants[0].plan)}
-               </div>
-             </div>
-           )}
+                 {/* Price */}
+                 <div className="flex justify-between items-end mb-3">
+                    <span className="text-xs text-gray-500 font-medium mb-1">Total Mensal</span>
+                    <span className="text-2xl font-bold text-blue-900 block leading-none tracking-tight">
+                        {formatMoney(v.totalPrice)}
+                    </span>
+                 </div>
 
-          <div className={`px-4 pb-4 min-h-[100px] flex flex-col justify-center ${selectedPlan ? 'pt-2' : 'pt-4'}`}>
-            {selectedPlan ? (
-                <div className="animate-fadeIn w-full">
-                  <div className="flex justify-between items-end mb-4 pt-2 border-t border-gray-200/50">
-                    <span className="text-sm text-gray-500 font-medium mb-1">Mensalidade Total</span>
-                    <div className="text-right">
-                        <span className="text-3xl font-bold text-blue-900 block leading-none tracking-tight">{formatMoney(selectedPlan.totalPrice)}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white rounded border border-gray-100 p-3">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-wider">Detalhamento por vida</p>
-                    <div className="space-y-2">
-                      {selectedPlan.details.map((detail, idx) => (
-                          <div key={idx} className="flex justify-between items-center text-sm text-gray-600 border-b border-gray-50 last:border-0 pb-1 last:pb-0">
-                          <div className="flex items-center gap-2">
-                            <span className="bg-gray-100 text-gray-600 text-xs font-bold px-1.5 rounded">{detail.count}x</span>
-                            <span>{detail.ageRange} anos</span>
-                          </div>
-                          <span className="font-mono text-gray-800 font-medium">{formatMoney(detail.subtotal)}</span>
+                 {/* Breakdown */}
+                 <div className="bg-white rounded border border-gray-100 p-2.5 mb-3">
+                    <div className="space-y-1.5">
+                      {v.details.map((detail, dIdx) => (
+                          <div key={dIdx} className="flex justify-between items-center text-xs text-gray-600">
+                            <div className="flex items-center gap-1.5">
+                                <span className="bg-gray-100 text-gray-700 font-bold px-1.5 py-0.5 rounded text-[10px]">{detail.count}x</span>
+                                <span>{detail.ageRange} anos</span>
+                            </div>
+                            <span className="font-mono text-gray-800 font-medium">{formatMoney(detail.subtotal)}</span>
                           </div>
                       ))}
                     </div>
-                  </div>
+                 </div>
 
-                  {/* COMPARE CHECKBOX */}
-                  <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-end">
+                 {/* Compare Button for this specific variant */}
+                 <div className="flex justify-end">
                       <button 
                         onClick={(e) => {
                             e.stopPropagation();
-                            onToggleCompare(selectedPlan);
+                            onToggleCompare(v);
                         }}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all
                             ${isSelectedForCompare 
                                 ? 'bg-blue-100 text-blue-800 ring-1 ring-blue-300' 
-                                : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                                : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-100'
                             }`}
                       >
-                        <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors
-                            ${isSelectedForCompare ? 'bg-blue-600 border-blue-600' : 'border-gray-400 bg-white'}
+                        <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-colors
+                            ${isSelectedForCompare ? 'bg-blue-600 border-blue-600' : 'border-gray-300 bg-white'}
                         `}>
                             {isSelectedForCompare && (
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-2.5 h-2.5 text-white">
                                   <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
                                 </svg>
                             )}
                         </div>
                         Comparar
                       </button>
-                  </div>
-
-                </div>
-            ) : (
-                <div className="flex flex-col items-center justify-center text-gray-400 animate-pulse py-2 gap-1 pt-4 pb-2">
-                    <span className="text-sm font-medium text-center text-gray-500">Selecione uma modalidade</span>
-                    <span className="text-xs text-center">para ver o preço calculado</span>
-                </div>
-            )}
-          </div>
+                 </div>
+               </div>
+             );
+           })}
         </div>
       </div>
 
@@ -303,8 +231,8 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, compareList, onTog
               {/* Header */}
               <div className={`${basePlan.logoColor} p-6 rounded-t-2xl border-b border-white/10 flex justify-between items-center flex-shrink-0`}>
                  <div>
-                    <p className="text-xs font-bold text-white/80 uppercase tracking-wide">{displayPlan.operator}</p>
-                    <h3 className="text-2xl font-bold text-white">{displayPlan.name}</h3>
+                    <p className="text-xs font-bold text-white/80 uppercase tracking-wide">{basePlan.operator}</p>
+                    <h3 className="text-2xl font-bold text-white">{basePlan.name}</h3>
                  </div>
                  <button onClick={() => setShowPlanDetails(false)} className="text-white/70 hover:text-white p-1">
                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
@@ -326,7 +254,7 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, compareList, onTog
                        Abrangência Geográfica
                     </h4>
                     <p className="text-gray-600 text-sm bg-gray-50 p-3 rounded-lg border border-gray-100">
-                      {displayPlan.coverage}
+                      {basePlan.coverage}
                     </p>
                  </div>
 
@@ -339,7 +267,7 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, compareList, onTog
                        Carências (Estimadas)
                     </h4>
                     <ul className="text-sm text-gray-600 space-y-2 bg-gray-50 p-3 rounded-lg border border-gray-100">
-                       {displayPlan.gracePeriods.map((gp, i) => (
+                       {basePlan.gracePeriods.map((gp, i) => (
                           <li key={i} className="flex items-start gap-2">
                              <div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 flex-shrink-0"></div>
                              <span>{gp}</span>
@@ -349,41 +277,50 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, compareList, onTog
                  </div>
 
                  {/* Tabela Copart */}
-                 {displayPlan.coparticipationType !== 'none' && (
-                   <div>
-                      <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-2 flex items-center gap-2">
-                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-blue-600">
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
-                         </svg>
-                         Coparticipação (Estimada)
-                      </h4>
-                      <div className="overflow-hidden rounded-lg border border-gray-200">
-                         <table className="min-w-full text-sm text-left">
-                            <thead className="bg-gray-100 text-gray-700 font-bold">
-                               <tr>
-                                  <th className="px-3 py-2">Serviço</th>
-                                  <th className="px-3 py-2">Valor</th>
-                               </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                               {displayPlan.copayFees.map((fee, i) => (
-                                  <tr key={i} className="bg-white">
-                                     <td className="px-3 py-2 text-gray-600">{fee.service}</td>
-                                     <td className="px-3 py-2 font-medium text-gray-800">{fee.value}</td>
-                                  </tr>
-                               ))}
-                            </tbody>
-                         </table>
-                      </div>
-                   </div>
-                 )}
-                 
-                 {displayPlan.coparticipationType === 'none' && (
-                    <div className="bg-green-50 border border-green-100 p-4 rounded-lg text-center">
-                       <p className="text-green-800 font-bold">Este plano não possui coparticipação.</p>
-                       <p className="text-green-600 text-sm">Uso livre sem taxas adicionais.</p>
-                    </div>
-                 )}
+                 <div className="space-y-4">
+                    <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-2 flex items-center gap-2">
+                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-blue-600">
+                         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                       </svg>
+                       Tabelas de Coparticipação
+                    </h4>
+                    
+                    {variants.map((v, index) => (
+                        <div key={index} className="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+                            <div className="bg-gray-100 px-4 py-2 border-b border-gray-200">
+                                <span className="text-xs font-bold text-gray-600 uppercase">
+                                    {v.plan.coparticipationType === 'none' ? 'Sem Coparticipação' : 
+                                     v.plan.coparticipationType === 'partial' ? 'Sem Copart. (Exceto Terapias)' : 
+                                     'Com Coparticipação'}
+                                </span>
+                            </div>
+
+                            {v.plan.coparticipationType !== 'none' ? (
+                                <table className="min-w-full text-sm text-left">
+                                    <thead className="bg-white text-gray-700 font-bold border-b border-gray-100">
+                                    <tr>
+                                        <th className="px-3 py-2 text-xs">Serviço</th>
+                                        <th className="px-3 py-2 text-xs">Valor</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                    {v.plan.copayFees.map((fee, i) => (
+                                        <tr key={i} className="bg-white">
+                                            <td className="px-3 py-2 text-gray-600 text-xs">{fee.service}</td>
+                                            <td className="px-3 py-2 font-medium text-gray-800 text-xs">{fee.value}</td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <div className="p-4 text-center">
+                                    <p className="text-green-700 font-bold text-sm">Este plano não possui coparticipação.</p>
+                                    <p className="text-green-600 text-xs">Uso livre sem taxas adicionais.</p>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                 </div>
                  
                  <p className="text-[10px] text-gray-400 italic text-center mt-4">
                    * Os valores e condições podem sofrer alterações sem aviso prévio. Consulte o contrato final.
