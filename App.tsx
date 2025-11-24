@@ -28,15 +28,24 @@ const App: React.FC = () => {
 
   const whatsappLink = "https://wa.me/5515991789707?text=Ol%C3%A1%2C%20Bruno!%0AQuero%20mais%20informa%C3%A7%C3%B5es%20sobre%20*plano%20de%20sa%C3%BAde*";
 
-  // Audio Playback Helper
+  // AUDIO PLAYBACK FUNCTION
   const playWelcomeAudio = () => {
     try {
-      // Ensure you have a file named 'welcome.mp3' in your public folder
       const audio = new Audio('/welcome.mp3');
-      audio.volume = 1.0; // Set volume to max to ensure it is heard
-      audio.play().catch(err => console.log('Audio playback failed (interaction required or file missing):', err));
-    } catch (e) {
-      console.error("Error initializing audio", e);
+      audio.volume = 1.0;
+      const playPromise = audio.play();
+
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log("Audio playing successfully");
+          })
+          .catch((error) => {
+            console.warn("Audio playback prevented or file missing:", error);
+          });
+      }
+    } catch (err) {
+      console.error("Error initializing audio:", err);
     }
   };
 
@@ -130,6 +139,9 @@ const App: React.FC = () => {
       // We trigger the visual alert in the UI, but we can also block here
       return;
     }
+
+    // Play Audio when proceeding to results
+    playWelcomeAudio();
 
     setStep('results');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -315,7 +327,6 @@ const App: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
               <button 
                 onClick={() => {
-                  playWelcomeAudio();
                   selectCategory('PF');
                 }}
                 className="group relative bg-white p-8 rounded-2xl shadow-md border-2 border-transparent hover:border-[#003366] hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center"
@@ -334,7 +345,6 @@ const App: React.FC = () => {
 
               <button 
                 onClick={() => {
-                  playWelcomeAudio();
                   setStep('lives-selection');
                 }}
                 className="group relative bg-white p-8 rounded-2xl shadow-md border-2 border-transparent hover:border-[#003366] hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center"
