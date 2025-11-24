@@ -10,7 +10,6 @@ interface PlanCardProps {
 export const PlanCard: React.FC<PlanCardProps> = ({ variants, onComparePlans }) => {
   const [showCopartInfo, setShowCopartInfo] = useState(false);
   const [showPlanDetails, setShowPlanDetails] = useState(false);
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   
   if (!variants || variants.length === 0) return null;
 
@@ -39,158 +38,6 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, onComparePlans }) 
         default: 
             return <span className="text-xs font-bold text-gray-600 bg-gray-50 px-2 py-1 rounded border border-gray-100">Padrão</span>;
      }
-  };
-
-  const handleDownloadUnifiedPDF = async () => {
-    setIsGeneratingPdf(true);
-
-    const activeVariants = [fullCopartVariant, noCopartVariant].filter(Boolean) as CalculatedPlan[];
-    
-    // Helper to get column title
-    const getColTitle = (v: CalculatedPlan) => {
-        if (v.plan.coparticipationType === 'full') return 'Com Coparticipação';
-        if (v.plan.coparticipationType === 'partial') return 'Sem Copart. (Exceto Terapias)';
-        return 'Sem Coparticipação';
-    };
-
-    // Helper to get copay value
-    const getCopayValue = (v: CalculatedPlan, service: string) => {
-        if (v.plan.coparticipationType === 'none') return 'Isento';
-        const fee = v.plan.copayFees.find(f => f.service === service);
-        return fee ? fee.value : '-';
-    };
-
-    // Get all unique services for rows
-    const allServices = Array.from(new Set(activeVariants.flatMap(v => v.plan.copayFees.map(f => f.service))));
-
-    // Build Table Header HTML
-    const tableHeader = activeVariants.map(v => `
-        <th style="padding: 10px; background: #f3f4f6; color: #374151; font-size: 12px; border: 1px solid #e5e7eb; width: ${100 / (activeVariants.length + 1)}%;">
-            ${getColTitle(v)}
-        </th>
-    `).join('');
-
-    // Build Price Rows HTML
-    const priceRow = activeVariants.map(v => `
-        <td style="padding: 10px; border: 1px solid #e5e7eb; font-weight: bold; color: #1e3a8a; font-size: 16px; text-align: center;">
-            ${formatMoney(v.totalPrice)}
-        </td>
-    `).join('');
-
-    // Build Breakdown Rows (Assuming same age structure for both, use first one)
-    const breakdownRows = activeVariants[0].details.map((det, idx) => `
-        <tr>
-            <td style="padding: 6px 10px; border: 1px solid #e5e7eb; color: #6b7280; font-size: 11px;">
-                ${det.count}x ${det.ageRange} anos
-            </td>
-            ${activeVariants.map(v => `
-                <td style="padding: 6px 10px; border: 1px solid #e5e7eb; color: #374151; font-size: 11px; text-align: center;">
-                    ${formatMoney(v.details[idx].unitPrice)}
-                </td>
-            `).join('')}
-        </tr>
-    `).join('');
-
-    // Build Copay Rows HTML
-    const copayRows = allServices.map(service => `
-        <tr>
-            <td style="padding: 8px 10px; border: 1px solid #e5e7eb; color: #374151; font-size: 11px; font-weight: 500;">
-                ${service}
-            </td>
-            ${activeVariants.map(v => `
-                <td style="padding: 8px 10px; border: 1px solid #e5e7eb; color: #4b5563; font-size: 11px; text-align: center;">
-                    ${getCopayValue(v, service)}
-                </td>
-            `).join('')}
-        </tr>
-    `).join('');
-
-    const content = `
-      <div style="font-family: 'Inter', sans-serif; padding: 20px; background: white; color: #1f2937;">
-        
-        <!-- Header -->
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #003366; padding-bottom: 15px; margin-bottom: 20px;">
-           <div>
-              <h1 style="font-size: 24px; font-weight: 800; color: #003366; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">TEM MAIS SAÚDE</h1>
-              <p style="font-size: 10px; font-weight: bold; color: #6b7280; margin: 2px 0 0 0; text-transform: uppercase; letter-spacing: 1px;">Corretora Autorizada</p>
-           </div>
-           
-           <div style="text-align: right;">
-              <div style="background: #003366; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">
-                ${new Date().toLocaleDateString('pt-BR')}
-              </div>
-           </div>
-        </div>
-
-        <!-- Plan Info -->
-        <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; margin-bottom: 20px;">
-            <h2 style="margin: 0 0 5px; color: #003366; font-size: 18px;">${basePlan.operator}</h2>
-            <h3 style="margin: 0 0 5px; color: #4b5563; font-size: 14px;">${basePlan.name}</h3>
-            <p style="margin: 0; color: #6b7280; font-size: 12px;">Hospitais: ${basePlan.hospitals.join(', ')}</p>
-        </div>
-
-        <!-- Comparison Table -->
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-            <thead>
-                <tr>
-                    <th style="padding: 10px; background: #f3f4f6; color: #374151; font-size: 12px; border: 1px solid #e5e7eb; text-align: left; width: 30%;">Item</th>
-                    ${tableHeader}
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Investment Section -->
-                <tr>
-                    <td colspan="${activeVariants.length + 1}" style="padding: 8px 10px; background: #eef2ff; color: #003366; font-size: 12px; font-weight: bold; border: 1px solid #e5e7eb; text-transform: uppercase;">
-                        Investimento Mensal
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding: 10px; border: 1px solid #e5e7eb; font-weight: bold; color: #374151; font-size: 14px;">Total</td>
-                    ${priceRow}
-                </tr>
-                ${breakdownRows}
-
-                <!-- Copay Section -->
-                <tr>
-                    <td colspan="${activeVariants.length + 1}" style="padding: 8px 10px; background: #eef2ff; color: #003366; font-size: 12px; font-weight: bold; border: 1px solid #e5e7eb; text-transform: uppercase; margin-top: 10px;">
-                        Tabela de Coparticipação
-                    </td>
-                </tr>
-                ${copayRows}
-            </tbody>
-        </table>
-
-        <!-- Footer -->
-        <div style="margin-top: 30px; text-align: center; font-size: 10px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 10px;">
-            <p style="margin-bottom: 4px;">Este documento é uma simulação. Os valores podem sofrer alterações.</p>
-            <p style="font-weight: bold; color: #003366; margin-bottom: 2px;">TEM MAIS SAÚDE</p>
-            <p>Rua Eduardo Prado, 211 Centro Votorantim-SP CEP 18110-090</p>
-        </div>
-      </div>
-    `;
-
-    // Create container
-    const element = document.createElement('div');
-    element.innerHTML = content;
-    
-    // PDF Options
-    const opt = {
-      margin: 10,
-      filename: `cotacao-${basePlan.operator.toLowerCase().replace(/\s/g, '-')}-comparativo.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    try {
-        // @ts-ignore
-        await window.html2pdf().from(element).set(opt).save();
-    } catch (e) {
-        console.error('PDF Generation Error', e);
-        alert('Erro ao gerar PDF. Tente novamente.');
-    } finally {
-        setIsGeneratingPdf(false);
-    }
   };
 
   const renderVariantBlock = (v: CalculatedPlan) => {
@@ -290,22 +137,6 @@ export const PlanCard: React.FC<PlanCardProps> = ({ variants, onComparePlans }) 
           <div className="space-y-2 mb-4">
             <div className="flex justify-between items-center">
                 <p className="text-xs font-semibold text-gray-500 uppercase">Principais Hospitais:</p>
-                
-                {/* Unified Download Button */}
-                <button 
-                    onClick={(e) => { e.stopPropagation(); handleDownloadUnifiedPDF(); }}
-                    disabled={isGeneratingPdf}
-                    className="text-gray-400 hover:text-blue-600 hover:bg-blue-50 p-1.5 rounded-full transition-all"
-                    title="Baixar Cotação Completa (PDF)"
-                >
-                    {isGeneratingPdf ? (
-                        <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-                    ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                        </svg>
-                    )}
-                </button>
             </div>
             <div className="flex flex-wrap gap-1">
               {basePlan.hospitals.map((h, i) => (
