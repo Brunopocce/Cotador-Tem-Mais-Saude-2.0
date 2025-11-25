@@ -1,6 +1,9 @@
+
+
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CalculatedPlan, HealthPlan } from '../types';
+import { AMHEMED_GRACE_DATA } from '../constants';
 
 interface PriceSummaryTableProps {
   groups: CalculatedPlan[][];
@@ -9,6 +12,7 @@ interface PriceSummaryTableProps {
 export const PriceSummaryTable: React.FC<PriceSummaryTableProps> = ({ groups }) => {
   const [selectedGroup, setSelectedGroup] = useState<CalculatedPlan[] | null>(null);
   const [showCopartInfo, setShowCopartInfo] = useState(false);
+  const [gracePeriodTab, setGracePeriodTab] = useState<'normal' | 'red1' | 'red2'>('normal');
 
   const formatMoney = (value: number) => 
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
@@ -115,7 +119,10 @@ export const PriceSummaryTable: React.FC<PriceSummaryTableProps> = ({ groups }) 
               return (
                 <tr 
                   key={idx} 
-                  onClick={() => setSelectedGroup(group)}
+                  onClick={() => {
+                    setGracePeriodTab('normal');
+                    setSelectedGroup(group);
+                  }}
                   className={`group bg-white transition-all duration-200 cursor-pointer ${styles.bgHover}`}
                 >
                   {/* Plan Info - Border Left stripe is applied here */}
@@ -282,14 +289,59 @@ export const PriceSummaryTable: React.FC<PriceSummaryTableProps> = ({ groups }) 
                           </svg>
                           Carências (Estimadas)
                         </h4>
-                        <ul className="text-sm text-gray-600 space-y-2 bg-gray-50 p-3 rounded-lg border border-gray-100">
-                          {basePlan.gracePeriods.map((gp, i) => (
-                              <li key={i} className="flex items-start gap-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 flex-shrink-0"></div>
-                                <span>{gp}</span>
-                              </li>
-                          ))}
-                        </ul>
+
+                        {basePlan.operator === 'Amhemed' ? (
+                            <div className="bg-gray-50 rounded-lg border border-gray-100 overflow-hidden">
+                                {/* Tabs */}
+                                <div className="flex border-b border-gray-200">
+                                    <button 
+                                        onClick={() => setGracePeriodTab('normal')}
+                                        className={`flex-1 py-2 text-[10px] font-bold uppercase transition-colors ${gracePeriodTab === 'normal' ? 'bg-blue-100 text-blue-800' : 'bg-white text-gray-500 hover:bg-gray-100'}`}
+                                    >
+                                        Normal<br/><span className="text-[9px] font-normal lowercase">(novo plano)</span>
+                                    </button>
+                                    <button 
+                                        onClick={() => setGracePeriodTab('red1')}
+                                        className={`flex-1 py-2 text-[10px] font-bold uppercase transition-colors ${gracePeriodTab === 'red1' ? 'bg-blue-100 text-blue-800' : 'bg-white text-gray-500 hover:bg-gray-100'}`}
+                                    >
+                                        Redução 1<br/><span className="text-[9px] font-normal lowercase">(&gt; 12 meses)</span>
+                                    </button>
+                                    <button 
+                                        onClick={() => setGracePeriodTab('red2')}
+                                        className={`flex-1 py-2 text-[10px] font-bold uppercase transition-colors ${gracePeriodTab === 'red2' ? 'bg-blue-100 text-blue-800' : 'bg-white text-gray-500 hover:bg-gray-100'}`}
+                                    >
+                                        Redução 2<br/><span className="text-[9px] font-normal lowercase">(&gt; 24 meses)</span>
+                                    </button>
+                                </div>
+                                
+                                {/* List content based on tab */}
+                                <div className="p-3">
+                                    <ul className="text-xs text-gray-600 space-y-2">
+                                        {(AMHEMED_GRACE_DATA[gracePeriodTab] as any[]).map((item, idx) => (
+                                            <li key={idx} className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-gray-100 last:border-0 pb-2 last:pb-0">
+                                                <span>{item.label}</span>
+                                                <span className={`font-bold ${item.highlight ? 'text-green-600 font-extrabold text-sm' : 'text-gray-900'}`}>{item.value}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                {/* CPT Warning */}
+                                <div className="bg-amber-50 border-t border-amber-200 p-3 text-xs text-amber-900">
+                                    <p className="font-bold mb-1">⚠️ Doenças e Lesões Pré-existentes (CPT)</p>
+                                    <p>A carência de 24 meses aplica-se <strong>exclusivamente</strong> a procedimentos de alta complexidade, cirurgias e leitos de alta tecnologia (UTI) relacionados diretamente à doença declarada. Consultas e exames simples seguem os prazos normais.</p>
+                                </div>
+                            </div>
+                        ) : (
+                            <ul className="text-sm text-gray-600 space-y-2 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                            {basePlan.gracePeriods.map((gp, i) => (
+                                <li key={i} className="flex items-start gap-2">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 flex-shrink-0"></div>
+                                    <span>{gp}</span>
+                                </li>
+                            ))}
+                            </ul>
+                        )}
                     </div>
 
                     {/* Copart Info Button */}
@@ -312,6 +364,23 @@ export const PriceSummaryTable: React.FC<PriceSummaryTableProps> = ({ groups }) 
                           </svg>
                           Tabelas de Coparticipação
                         </h4>
+
+                        {/* ALERT FOR EVA SAÚDE LIMIT */}
+                        {basePlan.operator === 'Eva Saúde' && (
+                            <div className="bg-teal-50 border border-teal-200 rounded-lg p-4 mb-4 flex items-start gap-3">
+                                <div className="p-2 bg-teal-100 rounded-full text-teal-600 shrink-0 mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-teal-900 text-sm mb-1">Diferencial Exclusivo: Limitador Mensal</h4>
+                                    <p className="text-teal-800 text-xs leading-relaxed">
+                                        O valor total pago em coparticipação nunca ultrapassa <strong>R$ 250,00 por mês</strong>, independentemente da quantidade de consultas ou procedimentos realizados.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
                         
                         {variants.map((v, index) => {
                             const type = v.plan.coparticipationType;

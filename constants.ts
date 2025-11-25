@@ -1,3 +1,5 @@
+
+
 import { AgeRange, HealthPlan } from './types';
 
 export const AGE_RANGES = Object.values(AgeRange);
@@ -17,6 +19,63 @@ const GRACE_PERIOD_STANDARD = [
   "10 meses: Parto",
   "24 meses: Doenças Preexistentes"
 ];
+
+// DATA STRUCTURE FOR AMHEMED GRACE PERIODS
+export const AMHEMED_GRACE_DATA = {
+  normal: [
+    { label: "Urgência e Emergência", value: "24 HORAS" },
+    { label: "Consultas Núcleo de Especialidades (Clínica Amhemed)", value: "24 HORAS" },
+    { label: "Consultas Rede Credenciada", value: "30 DIAS" },
+    { label: "Exames Complementares Básicos, Laboratoriais Básicos", value: "24 HORAS" },
+    { label: "Exames Complexos, Internação Clínica/Cirúrgica/Psiquiátrica", value: "180 DIAS" },
+    { label: "Terapias Simples (Psicologia, Fonoaudiologia)", value: "180 DIAS" },
+    { label: "Terapias Específicas (ABA, BOBATH, etc)", value: "180 DIAS" },
+    { label: "Partos e Termos", value: "300 DIAS" },
+    { label: "Doenças e Lesões Pré Existentes", value: "24 MESES" }
+  ],
+  red1: [
+    { label: "Urgência e Emergência", value: "24 HORAS" },
+    { label: "Consultas Núcleo de Especialidades (Clínica Amhemed)", value: "24 HORAS" },
+    { label: "Consultas Rede Credenciada", value: "30 DIAS" },
+    { label: "Exames Complementares Básicos, Laboratoriais Básicos", value: "24 HORAS" },
+    { label: "Exames Complexos, Internação Clínica/Cirúrgica/Psiquiátrica", value: "90 DIAS", highlight: true },
+    { label: "Terapias Simples (Psicologia, Fonoaudiologia)", value: "180 DIAS" },
+    { label: "Terapias Específicas (ABA, BOBATH, etc)", value: "180 DIAS" },
+    { label: "Partos e Termos", value: "300 DIAS" },
+    { label: "Doenças e Lesões Pré Existentes", value: "24 MESES" }
+  ],
+  red2: [
+    { label: "Urgência e Emergência", value: "24 HORAS" },
+    { label: "Consultas Núcleo de Especialidades (Clínica Amhemed)", value: "24 HORAS" },
+    { label: "Consultas Rede Credenciada", value: "30 DIAS" },
+    { label: "Exames Complementares Básicos, Laboratoriais Básicos", value: "24 HORAS" },
+    { label: "Exames Complexos, Internação Clínica/Cirúrgica/Psiquiátrica", value: "60 DIAS", highlight: true },
+    { label: "Terapias Simples (Psicologia, Fonoaudiologia)", value: "180 DIAS" },
+    { label: "Terapias Específicas (ABA, BOBATH, etc)", value: "180 DIAS" },
+    { label: "Partos e Termos", value: "300 DIAS" },
+    { label: "Doenças e Lesões Pré Existentes", value: "24 MESES" }
+  ]
+};
+
+// DATA STRUCTURE FOR FENIX MEDICAL GRACE PERIODS
+export const FENIX_GRACE_DATA = {
+  standard: [
+    { label: "Urgência e Emergência", value: "24 HORAS" },
+    { label: "Consultas e Exames Simples", value: "30 DIAS" },
+    { label: "Exames Especiais e Terapias", value: "180 DIAS" },
+    { label: "Internações e Cirurgias", value: "180 DIAS" },
+    { label: "Parto", value: "300 DIAS" },
+    { label: "Doenças Preexistentes", value: "24 MESES" }
+  ],
+  reduced: [
+    { label: "Urgência e Emergência", value: "24 HORAS" },
+    { label: "Consultas e Exames Simples", value: "24 HORAS", highlight: true },
+    { label: "Exames Especiais e Terapias", value: "30 DIAS", highlight: true },
+    { label: "Internações e Cirurgias", value: "120 DIAS", highlight: true },
+    { label: "Parto", value: "300 DIAS" },
+    { label: "Doenças Preexistentes", value: "24 MESES" }
+  ]
+};
 
 const GRACE_PERIOD_PME_30 = [
   "Isenção total de carências (exceto parto e preexistentes para algumas operadoras).",
@@ -92,39 +151,93 @@ const COPAY_FULL_AMHE_PLUS_PME = [
 
 
 const COPAY_PARTIAL_GNDI = [
-  { service: "Consultas", value: "R$ 0,00 (Isento)" },
-  { service: "Exames Simples", value: "R$ 0,00 (Isento)" },
-  { service: "Pronto Socorro", value: "R$ 40,00" },
-  { service: "Internação", value: "R$ 200,00" },
-  { service: "Terapias Simples", value: "R$ 25,00" },
-  { service: "Terapias Especiais", value: "R$ 40,00" }
+  { service: "Consultas", value: "Isento" },
+  { service: "Pronto Socorro", value: "Isento" },
+  { service: "Exames Simples", value: "Isento" },
+  { service: "Exames Especiais", value: "Isento" },
+  { service: "Internação", value: "Isento" },
+  { service: "Terapias Simples", value: "R$ 40,84" },
+  { service: "Terapias Especiais", value: "R$ 75,84" }
 ];
 
 const COPAY_FULL_GNDI = [
-  { service: "Consultas", value: "R$ 25,00" },
-  { service: "Exames Simples", value: "R$ 12,00" },
-  { service: "Pronto Socorro", value: "R$ 50,00" },
+  { service: "Consultas", value: "R$ 41,95" },
+  { service: "Pronto Socorro", value: "R$ 59,44" },
+  { service: "Exames Simples", value: "até R$ 49,54" },
+  { service: "Exames Especiais", value: "até R$ 121,09" },
   { service: "Internação", value: "R$ 250,00" },
-  { service: "Terapias Simples", value: "R$ 25,00" },
-  { service: "Terapias Especiais", value: "R$ 25,00" }
+  { service: "Terapias Simples", value: "R$ 40,84" },
+  { service: "Terapias Especiais", value: "R$ 75,84" }
+];
+
+const COPAY_PARTIAL_GNDI_SMART200 = [
+  { service: "Consultas", value: "Isento" },
+  { service: "Pronto Socorro", value: "Isento" },
+  { service: "Exames Simples", value: "Isento" },
+  { service: "Exames Especiais", value: "Isento" },
+  { service: "Internação", value: "Isento" },
+  { service: "Terapias Simples", value: "até R$ 40,00" },
+  { service: "Terapias Especiais", value: "até R$ 40,00" }
+];
+
+const COPAY_FULL_GNDI_SMART200 = [
+  { service: "Consultas", value: "R$ 30,00" },
+  { service: "Pronto Socorro", value: "R$ 80,00" },
+  { service: "Exames Simples", value: "até R$ 20,00" },
+  { service: "Exames Especiais", value: "até R$ 100,00" },
+  { service: "Internação", value: "R$ 250,00" },
+  { service: "Terapias Simples", value: "até R$ 40,00" },
+  { service: "Terapias Especiais", value: "até R$ 40,00" }
 ];
 
 const COPAY_FULL_UNIMED = [
-  { service: "Consultas", value: "30% (Limitado a R$ 35)" },
-  { service: "Exames Simples", value: "30% (Limitado a R$ 20)" },
+  { service: "Consultas", value: "R$ 35,00" },
   { service: "Pronto Socorro", value: "R$ 50,00" },
+  { service: "Exames Simples", value: "R$ 5,90" },
+  { service: "Exames Especiais", value: "até R$ 49,90" },
   { service: "Internação", value: "R$ 250,00 (Franquia)" },
-  { service: "Terapias Simples", value: "30%" },
-  { service: "Terapias Especiais", value: "30%" }
+  { service: "Terapias Simples", value: "R$ 9,90" },
+  { service: "Terapias Especiais", value: "R$ 49,90" }
+];
+
+const COPAY_PARTIAL_AMIL = [
+  { service: "Consultas", value: "Isento" },
+  { service: "Pronto Socorro", value: "Isento" },
+  { service: "Exames Simples", value: "Isento" },
+  { service: "Exames Especiais", value: "Isento" },
+  { service: "Internação", value: "Isento" },
+  { service: "Terapias Simples", value: "até R$ 50,00" },
+  { service: "Terapias Especiais", value: "até R$ 50,00" }
 ];
 
 const COPAY_FULL_AMIL = [
-  { service: "Consultas", value: "30%" },
-  { service: "Exames", value: "30%" },
-  { service: "Pronto Socorro", value: "Fixed Fee" },
-  { service: "Internação", value: "Franquia por evento" },
-  { service: "Terapias Simples", value: "30%" },
-  { service: "Terapias Especiais", value: "30%" }
+  { service: "Consultas", value: "até R$ 30,00" },
+  { service: "Pronto Socorro", value: "até R$ 90,00" },
+  { service: "Exames Simples", value: "até R$ 25,00" },
+  { service: "Exames Especiais", value: "até R$ 110,00" },
+  { service: "Internação", value: "R$ 220,00" },
+  { service: "Terapias Simples", value: "até R$ 50,00" },
+  { service: "Terapias Especiais", value: "até R$ 50,00" }
+];
+
+const COPAY_FULL_FENIX = [
+  { service: "Consultas", value: "R$ 25,00" },
+  { service: "Pronto Socorro", value: "R$ 35,00" },
+  { service: "Exames Simples", value: "Isento" },
+  { service: "Exames Especiais", value: "Isento" },
+  { service: "Internação", value: "Isento" },
+  { service: "Terapias Simples", value: "Isento" },
+  { service: "Terapias Especiais", value: "R$ 35,00" }
+];
+
+const COPAY_FULL_EVA = [
+  { service: "Consultas", value: "até R$ 40,00" },
+  { service: "Pronto Socorro", value: "até R$ 70,00" },
+  { service: "Exames Simples", value: "até R$ 50,00" },
+  { service: "Exames Especiais", value: "até R$ 150,00" },
+  { service: "Internação", value: "R$ 250,00" },
+  { service: "Terapias Simples", value: "até R$ 40,00" },
+  { service: "Terapias Especiais", value: "até R$ 150,00" }
 ];
 
 // Helper function to generate prices based on a base value
@@ -158,7 +271,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Ideal para empresas.',
     hospitals: ['Hospital Amhemed', 'BOS', 'Santa Lucinda'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional (Sorocaba e Votorantim)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_PARTIAL_AMHE_IDEAL_PME,
     prices: {
@@ -184,7 +297,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Opção econômica.',
     hospitals: ['Hospital Amhemed', 'BOS', 'Santa Lucinda'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional (Sorocaba e Votorantim)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_AMHE_IDEAL_PME,
     prices: {
@@ -212,7 +325,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede credenciada regional.',
     hospitals: ['Hospital Amhemed', 'BOS', 'Santa Lucinda'],
     categories: [CAT_PME_1],
-    coverage: 'Regional (Sorocaba, Votorantim e região)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_PARTIAL_AMHE_PLUS_PME,
     prices: {
@@ -238,7 +351,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede credenciada regional.',
     hospitals: ['Hospital Amhemed', 'BOS', 'Santa Lucinda'],
     categories: [CAT_PME_1],
-    coverage: 'Regional (Sorocaba, Votorantim e região)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_AMHE_PLUS_PME,
     prices: {
@@ -266,7 +379,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede credenciada regional.',
     hospitals: ['Hospital Amhemed', 'BOS', 'Santa Lucinda'],
     categories: [CAT_PF],
-    coverage: 'Regional (Sorocaba, Votorantim e região)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_PARTIAL_AMHEMED,
     prices: {
@@ -292,7 +405,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede credenciada regional.',
     hospitals: ['Hospital Amhemed', 'BOS', 'Santa Lucinda'],
     categories: [CAT_PF],
-    coverage: 'Regional (Sorocaba, Votorantim e região)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_AMHEMED,
     prices: {
@@ -320,7 +433,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede credenciada regional.',
     hospitals: ['Hospital Amhemed', 'BOS', 'Santa Lucinda'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional (Sorocaba, Votorantim e região)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_PARTIAL_AMHE_PLUS_PME,
     prices: {
@@ -346,7 +459,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede credenciada regional.',
     hospitals: ['Hospital Amhemed', 'BOS', 'Santa Lucinda'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional (Sorocaba, Votorantim e região)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_AMHE_PLUS_PME,
     prices: {
@@ -374,7 +487,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Acomodação individual.',
     hospitals: ['Hospital Amhemed', 'BOS', 'Santa Lucinda'],
     categories: [CAT_PF],
-    coverage: 'Regional (Sorocaba, Votorantim e região)',
+    coverage: 'Sorocaba, Araçoiaba da Serra; Boituva; Capela do Alto; Iperó; Itapetininga; Pilar do Sul; Porto Feliz; Salto; Salto de Pirapora; São Roque; Votorantim.',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_PARTIAL_AMHEMED,
     prices: {
@@ -400,7 +513,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Acomodação individual.',
     hospitals: ['Hospital Amhemed', 'BOS', 'Santa Lucinda'],
     categories: [CAT_PF],
-    coverage: 'Regional (Sorocaba, Votorantim e região)',
+    coverage: 'Sorocaba, Araçoiaba da Serra; Boituva; Capela do Alto; Iperó; Itapetininga; Pilar do Sul; Porto Feliz; Salto; Salto de Pirapora; São Roque; Votorantim.',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_AMHEMED,
     prices: {
@@ -428,7 +541,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Acomodação individual.',
     hospitals: ['Hospital Amhemed', 'BOS', 'Santa Lucinda'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional (Sorocaba, Votorantim e região)',
+    coverage: 'Sorocaba, Araçoiaba da Serra; Boituva; Capela do Alto; Iperó; Itapetininga; Pilar do Sul; Porto Feliz; Salto; Salto de Pirapora; São Roque; Votorantim.',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_PARTIAL_AMHE_PLUS_PME,
     prices: {
@@ -454,7 +567,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Acomodação individual.',
     hospitals: ['Hospital Amhemed', 'BOS', 'Santa Lucinda'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional (Sorocaba, Votorantim e região)',
+    coverage: 'Sorocaba, Araçoiaba da Serra; Boituva; Capela do Alto; Iperó; Itapetininga; Pilar do Sul; Porto Feliz; Salto; Salto de Pirapora; São Roque; Votorantim.',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_AMHE_PLUS_PME,
     prices: {
@@ -487,7 +600,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede própria GNDI.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PME_1],
-    coverage: 'Regional (Sorocaba, Jundiaí, Campinas)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_PARTIAL_GNDI,
     prices: {
@@ -513,7 +626,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede própria GNDI.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PME_1],
-    coverage: 'Regional (Sorocaba, Jundiaí, Campinas)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_GNDI,
     prices: {
@@ -541,7 +654,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede própria GNDI.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PF],
-    coverage: 'Regional (Sorocaba, Jundiaí, Campinas)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_PARTIAL_GNDI,
     prices: {
@@ -567,7 +680,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede própria GNDI.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PF],
-    coverage: 'Regional (Sorocaba, Jundiaí, Campinas)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_GNDI,
     prices: {
@@ -595,7 +708,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede própria GNDI.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional (Sorocaba, Jundiaí, Campinas)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_PARTIAL_GNDI,
     prices: {
@@ -621,7 +734,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede própria GNDI.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional (Sorocaba, Jundiaí, Campinas)',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_GNDI,
     prices: {
@@ -703,9 +816,9 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede ampla.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PME_1],
-    coverage: 'Regional (Sorocaba, Jundiaí e região)',
+    coverage: 'Sorocaba, Itu, Votorantim entre outras cidades de São Paulo',
     gracePeriods: GRACE_PERIOD_STANDARD,
-    copayFees: COPAY_PARTIAL_GNDI,
+    copayFees: COPAY_PARTIAL_GNDI_SMART200,
     prices: {
       [AgeRange.RANGE_0_18]: 246.14,
       [AgeRange.RANGE_19_23]: 332.24,
@@ -729,9 +842,9 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Smart 200up com coparticipação total.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PME_1],
-    coverage: 'Regional (Sorocaba, Jundiaí e região)',
+    coverage: 'Sorocaba, Itu, Votorantim entre outras cidades de São Paulo',
     gracePeriods: GRACE_PERIOD_STANDARD,
-    copayFees: COPAY_FULL_GNDI,
+    copayFees: COPAY_FULL_GNDI_SMART200,
     prices: {
       [AgeRange.RANGE_0_18]: 184.59,
       [AgeRange.RANGE_19_23]: 249.16,
@@ -757,9 +870,9 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Rede ampla.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional (Sorocaba, Jundiaí e região)',
+    coverage: 'Sorocaba, Itu, Votorantim entre outras cidades de São Paulo',
     gracePeriods: GRACE_PERIOD_STANDARD,
-    copayFees: COPAY_PARTIAL_GNDI,
+    copayFees: COPAY_PARTIAL_GNDI_SMART200,
     prices: {
       [AgeRange.RANGE_0_18]: 172.80,
       [AgeRange.RANGE_19_23]: 233.24,
@@ -783,9 +896,9 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Smart 200up com coparticipação total.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional (Sorocaba, Jundiaí e região)',
+    coverage: 'Sorocaba, Itu, Votorantim entre outras cidades de São Paulo',
     gracePeriods: GRACE_PERIOD_STANDARD,
-    copayFees: COPAY_FULL_GNDI,
+    copayFees: COPAY_FULL_GNDI_SMART200,
     prices: {
       [AgeRange.RANGE_0_18]: 129.59,
       [AgeRange.RANGE_19_23]: 174.92,
@@ -811,7 +924,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Acomodação individual.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PME_1],
-    coverage: 'Nacional',
+    coverage: 'Sorocaba, Itu, Votorantim, Araçoiaba da Serra, Iperó, Ibiúna, Boituva entre outras dezenas de cidades de São Paulo.',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_PARTIAL_GNDI,
     prices: {
@@ -838,7 +951,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Acomodação individual.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PME_1],
-    coverage: 'Nacional',
+    coverage: 'Sorocaba, Itu, Votorantim, Araçoiaba da Serra, Iperó, Ibiúna, Boituva entre outras dezenas de cidades de São Paulo.',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_GNDI,
     prices: {
@@ -866,20 +979,20 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Acomodação individual.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Nacional',
+    coverage: 'Sorocaba, Itu, Votorantim, Araçoiaba da Serra, Iperó, Ibiúna, Boituva entre outras dezenas de cidades de São Paulo.',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_PARTIAL_GNDI,
     prices: {
-      [AgeRange.RANGE_0_18]: 264.87,
-      [AgeRange.RANGE_19_23]: 357.52,
-      [AgeRange.RANGE_24_28]: 422.52,
-      [AgeRange.RANGE_29_33]: 441.45,
-      [AgeRange.RANGE_34_38]: 456.20,
-      [AgeRange.RANGE_39_43]: 501.82,
-      [AgeRange.RANGE_44_48]: 652.36,
-      [AgeRange.RANGE_49_53]: 848.07,
-      [AgeRange.RANGE_54_58]: 1102.49,
-      [AgeRange.RANGE_59_PLUS]: 1589.02,
+      [AgeRange.RANGE_0_18]: 275.46,
+      [AgeRange.RANGE_19_23]: 371.81,
+      [AgeRange.RANGE_24_28]: 439.41,
+      [AgeRange.RANGE_29_33]: 459.10,
+      [AgeRange.RANGE_34_38]: 474.44,
+      [AgeRange.RANGE_39_43]: 521.88,
+      [AgeRange.RANGE_44_48]: 678.44,
+      [AgeRange.RANGE_49_53]: 881.97,
+      [AgeRange.RANGE_54_58]: 1146.56,
+      [AgeRange.RANGE_59_PLUS]: 1652.54,
     },
   },
   // --- Smart 400 (PME 2-29) - Full ---
@@ -893,20 +1006,20 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Acomodação individual.',
     hospitals: ['Hospital NotreCare', 'Modelo'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Nacional',
+    coverage: 'Sorocaba, Itu, Votorantim, Araçoiaba da Serra, Iperó, Ibiúna, Boituva entre outras dezenas de cidades de São Paulo.',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_GNDI,
     prices: {
-      [AgeRange.RANGE_0_18]: 185.41,
-      [AgeRange.RANGE_19_23]: 250.27,
-      [AgeRange.RANGE_24_28]: 295.77,
-      [AgeRange.RANGE_29_33]: 309.02,
-      [AgeRange.RANGE_34_38]: 319.34,
-      [AgeRange.RANGE_39_43]: 351.28,
-      [AgeRange.RANGE_44_48]: 456.66,
-      [AgeRange.RANGE_49_53]: 593.66,
-      [AgeRange.RANGE_54_58]: 771.76,
-      [AgeRange.RANGE_59_PLUS]: 1112.33,
+      [AgeRange.RANGE_0_18]: 192.83,
+      [AgeRange.RANGE_19_23]: 260.29,
+      [AgeRange.RANGE_24_28]: 307.61,
+      [AgeRange.RANGE_29_33]: 321.39,
+      [AgeRange.RANGE_34_38]: 332.12,
+      [AgeRange.RANGE_39_43]: 365.34,
+      [AgeRange.RANGE_44_48]: 474.94,
+      [AgeRange.RANGE_49_53]: 617.42,
+      [AgeRange.RANGE_54_58]: 802.65,
+      [AgeRange.RANGE_59_PLUS]: 1156.85,
     },
   },
 
@@ -926,7 +1039,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Uso livre.',
     hospitals: ['Hospital Santo Antônio'],
     categories: [CAT_PME_1],
-    coverage: 'Regional (Sorocaba e região)',
+    coverage: 'Sorocaba e Votorantim',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_NONE,
     prices: {
@@ -952,9 +1065,9 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Plano econômico.',
     hospitals: ['Hospital Santo Antônio'],
     categories: [CAT_PME_1],
-    coverage: 'Regional (Sorocaba e região)',
+    coverage: 'Sorocaba e Votorantim',
     gracePeriods: GRACE_PERIOD_STANDARD,
-    copayFees: COPAY_FULL_AMHEMED, // Assuming similar structure
+    copayFees: COPAY_FULL_FENIX,
     prices: {
       [AgeRange.RANGE_0_18]: 148.20,
       [AgeRange.RANGE_19_23]: 167.70,
@@ -980,7 +1093,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Uso livre.',
     hospitals: ['Hospital Santo Antônio'],
     categories: [CAT_PF],
-    coverage: 'Regional (Sorocaba e região)',
+    coverage: 'Sorocaba e Votorantim',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_NONE,
     prices: {
@@ -1006,9 +1119,9 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Plano econômico.',
     hospitals: ['Hospital Santo Antônio'],
     categories: [CAT_PF],
-    coverage: 'Regional (Sorocaba e região)',
+    coverage: 'Sorocaba e Votorantim',
     gracePeriods: GRACE_PERIOD_STANDARD,
-    copayFees: COPAY_FULL_AMHEMED,
+    copayFees: COPAY_FULL_FENIX,
     prices: {
       [AgeRange.RANGE_0_18]: 234.00,
       [AgeRange.RANGE_19_23]: 234.00,
@@ -1034,7 +1147,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Uso livre.',
     hospitals: ['Hospital Santo Antônio'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional (Sorocaba e região)',
+    coverage: 'Sorocaba e Votorantim',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_NONE,
     prices: {
@@ -1060,9 +1173,9 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Plano econômico.',
     hospitals: ['Hospital Santo Antônio'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional (Sorocaba e região)',
+    coverage: 'Sorocaba e Votorantim',
     gracePeriods: GRACE_PERIOD_STANDARD,
-    copayFees: COPAY_FULL_AMHEMED,
+    copayFees: COPAY_FULL_FENIX,
     prices: {
       [AgeRange.RANGE_0_18]: 148.20,
       [AgeRange.RANGE_19_23]: 167.70,
@@ -1093,7 +1206,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Melhor rede médica da região.',
     hospitals: ['Hospital Unimed', 'Santa Lucinda'],
     categories: [CAT_PME_1],
-    coverage: 'Regional (Sorocaba e Votorantim)',
+    coverage: 'Sorocaba e região, com atendimento de urgência e emergência a nível nacional',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_UNIMED,
     prices: {
@@ -1121,7 +1234,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Melhor rede médica da região.',
     hospitals: ['Hospital Unimed', 'Santa Lucinda'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional (Sorocaba e Votorantim)',
+    coverage: 'Sorocaba e região, com atendimento de urgência e emergência a nível nacional',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_UNIMED,
     prices: {
@@ -1154,9 +1267,9 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Foco na saúde da mulher.',
     hospitals: ['Hospital Evangélico'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Regional',
+    coverage: 'Sorocaba',
     gracePeriods: GRACE_PERIOD_STANDARD,
-    copayFees: COPAY_FULL_AMHEMED,
+    copayFees: COPAY_FULL_EVA,
     prices: {
       [AgeRange.RANGE_0_18]: 144.00,
       [AgeRange.RANGE_19_23]: 169.00,
@@ -1187,9 +1300,9 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Cobertura nacional.',
     hospitals: ['Hospital Evangélico', 'Hospital NotreCare'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Nacional',
+    coverage: 'Abrangência a nível nacional, São Paulo, Rio de Janeiro, Pernambuco, Amazonas entre outros estados',
     gracePeriods: GRACE_PERIOD_STANDARD,
-    copayFees: COPAY_FULL_AMIL,
+    copayFees: COPAY_PARTIAL_AMIL,
     prices: {
       [AgeRange.RANGE_0_18]: 353.26,
       [AgeRange.RANGE_19_23]: 413.31,
@@ -1213,7 +1326,7 @@ export const MOCK_PLANS: HealthPlan[] = [
     description: 'Cobertura nacional.',
     hospitals: ['Hospital Evangélico', 'Hospital NotreCare'],
     categories: [CAT_PME_2, CAT_PME_30],
-    coverage: 'Nacional',
+    coverage: 'Abrangência a nível nacional, São Paulo, Rio de Janeiro, Pernambuco, Amazonas entre outros estados',
     gracePeriods: GRACE_PERIOD_STANDARD,
     copayFees: COPAY_FULL_AMIL,
     prices: {
