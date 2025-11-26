@@ -195,7 +195,7 @@ const COPAY_FULL_UNIMED = [
   { service: "Pronto Socorro", value: "R$ 50,00" },
   { service: "Exames Simples", value: "R$ 5,90" },
   { service: "Exames Especiais", value: "até R$ 49,90" },
-  { service: "Internação", value: "R$ 250,00 (Franquia)" },
+  { service: "Internação", value: "Isento" },
   { service: "Terapias Simples", value: "R$ 9,90" },
   { service: "Terapias Especiais", value: "R$ 49,90" }
 ];
